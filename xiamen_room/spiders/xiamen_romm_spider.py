@@ -10,16 +10,16 @@ class XiamenRommSpiderSpider(scrapy.Spider):
     def start_requests(self):
         all_json = [
             {
-                'BuildID': '6000024056',
-                'NAID': '1000012510',
-                'lotid': '137842',
-                't': '1537063206615'
+                'BuildID': '6000024846',
+                'NAID': '29406',
+                'lotid': '123684',
+                't': '1537614049842'
             },
             {
-                'BuildID': '6000024058',
-                'NAID': '1000012510',
-                'lotid': '137842',
-                't': '1537063235230'
+                'BuildID': '6000024842',
+                'NAID': '29405',
+                'lotid': '123684',
+                't': '1537614182877'
             }
         ]
 
@@ -44,23 +44,43 @@ class XiamenRommSpiderSpider(scrapy.Spider):
         xiamen_item = XiamenRoomItem()
         try:
             # has_data = all_list[6]
-            xiamen_item['address'] = all_list[0].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['room_id'] = all_list[1].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['property'] = all_list[2].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['use'] = all_list[3].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['price'] = all_list[4].xpath(".//td[2]/text()").extract_first().split(' ')[0]
-            xiamen_item['area'] = all_list[5].xpath(".//td[2]/text()").extract_first().split(' ')[0]
+            for item_value in all_list:
+                tmp_value = item_value.xpath(".//td[1]/text()").extract_first()
+                tmp_value_2 = item_value.xpath(".//td[2]/text()").extract_first()
+                if tmp_value == '坐落':
+                    xiamen_item['address'] = tmp_value_2
+                elif tmp_value == '室号':
+                    xiamen_item['room_id'] = tmp_value_2
+                elif tmp_value == '性质':
+                    xiamen_item['property'] = tmp_value_2
+                elif tmp_value == '用途':
+                    xiamen_item['use'] = tmp_value_2
+                elif tmp_value == '面积':
+                    xiamen_item['area'] = tmp_value_2.split(' ')[0]
+                elif tmp_value == '拟售价格':
+                    xiamen_item['price'] = tmp_value_2.split(' ')[0]
+                elif tmp_value == '权属状态':
+                    xiamen_item['status'] = tmp_value_2
+
+
+            # xiamen_item['address'] = all_list[0].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['room_id'] = all_list[1].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['property'] = all_list[2].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['use'] = all_list[3].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['price'] = all_list[4].xpath(".//td[2]/text()").extract_first().split(' ')[0]
+            # xiamen_item['area'] = all_list[5].xpath(".//td[2]/text()").extract_first().split(' ')[0]
             # xiamen_item['status'] = all_list[6].xpath(".//td[2]/text()").extract_first()
         except:
-            print('=====')
-            xiamen_item['address'] = all_list[0].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['room_id'] = all_list[1].xpath(".//td[2]/text()").extract_first()
+            pass
+            # print('=====')
+            # xiamen_item['address'] = all_list[0].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['room_id'] = all_list[1].xpath(".//td[2]/text()").extract_first()
             # xiamen_item['property'] = all_list[2].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['use'] = all_list[2].xpath(".//td[2]/text()").extract_first()
-            xiamen_item['price'] = all_list[3].xpath(".//td[2]/text()").extract_first().split(' ')[0]
+            # xiamen_item['use'] = all_list[2].xpath(".//td[2]/text()").extract_first()
+            # xiamen_item['price'] = all_list[3].xpath(".//td[2]/text()").extract_first().split(' ')[0]
             # xiamen_item['area'] = all_list[5].xpath(".//td[2]/text()").extract_first().split(' ')[0]
-            xiamen_item['status'] = all_list[4].xpath(".//td[2]/text()").extract_first()
-        print(xiamen_item)
+            # xiamen_item['status'] = all_list[4].xpath(".//td[2]/text()").extract_first()
+        # print(xiamen_item)
         yield xiamen_item
         # next_link = response.xpath("")
         # if next_link:
